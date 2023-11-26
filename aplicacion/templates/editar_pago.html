@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block contenido %}
+
+<style>
+    /* Ajustar el tamaño de fuente para todo el contenedor */
+    .container {
+        font-size: 20px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    /* Aumentar el tamaño de fuente para los encabezados */
+    h1 {
+        font-size: 25px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    /* Aumentar el tamaño de fuente para los elementos de la lista */
+    .list-group-item {
+        font-size: 16px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    /* Estilo para el formulario */
+    .formulario-pago {
+        font-size: 16px;
+        padding: 20px;
+    }
+
+    /* Estilo para los botones */
+    .btn-registrar-pago {
+        margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+        width: 100%; /* Ancho completo para todos los campos de entrada y select */
+        padding: 10px;
+        border: 1px solid #004cff;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .input-group {
+    display: flex; /* Para alinear elementos horizontalmente */
+    align-items: center; /* Para alinear elementos verticalmente */
+    width: 100%; /* Ajusta el ancho según sea necesario */
+    padding: 10px;
+    border: 1px solid #004cff;
+    border-radius: 5px;
+}
+
+/* Estilo específico para el campo de entrada en el spin button */
+.input-group input[type="number"] {
+    width: 100%; /* Ajusta el ancho del campo de entrada */
+    border: none; /* Puedes eliminar el borde si lo prefieres */
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilo específico para los botones del spin button */
+.input-group button {
+    background: #004cff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Estilo cuando se pasa el cursor sobre los botones */
+.input-group button:hover {
+    background: #0030a1; /* Puedes cambiar el color al pasar el cursor si lo deseas */
+}
+
+.titulo {
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    color: #fff;
+    font-size: 40px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    margin-top: 20px; /* Agregamos margen superior para separar el título de los botones */
+}
+
+#id_comprobante_pago {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #004cff;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #007bff;
+    background-color: #f7f7f7;
+}
+    /* Estilo para el contenedor del campo de fecha y hora */
+    .fecha-hora-container {
+        margin-top: 10px;
+    }
+
+    /* Estilo para el campo de fecha y hora */
+    input[type="datetime-local"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #004cff;
+        border-radius: 5px;
+    }
+
+        /* Estilo para el campo de selección 'jefe_de_familia' */
+    .jefe-familia-select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #004cff;
+        border-radius: 5px;
+        }
+
+    textarea[name="observaciones"]{
+    width: 100%; /* Ajusta el ancho según tus preferencias */
+    height: 100px; /* Ajusta la altura según tus preferencias */
+    font-size: 14px; /* Ajusta el tamaño del texto según tus preferencias */
+    }
+
+    /* Estilo para campos con borde azul */
+.border-blue {
+    border: 1px solid #004cff; 
+    /* Puedes ajustar el color según tus preferencias */
+}
+
+input[type="text"],
+input[type="date"],
+select,
+textarea,
+input[type="email"],
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #004cff;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #007bff;
+    background-color: #f7f7f7;
+}
+
+.select2-selection__rendered {
+    border: 1px solid #004cff;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f7f7f7;
+}
+
+
+</style>
+
+<div class="card">
+    <div class="card-body">
+        <div class="titulo">Registrar Pagos</div>
+        <form method="post" enctype="multipart/form-data" id="pagos-form">
+            {% csrf_token %}
+
+            <div class="row">
+                <!-- Primera columna de campos -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.fecha.id_for_label }}">Fecha</label>
+                        <input type="date" class="form-control" id="{{ form.fecha.id_for_label }}" name="{{ form.fecha.html_name }}" value="{% if form.fecha.value %}{{ form.fecha.value|date:'Y-m-d' }}{% endif %}">
+                    </div>         
+                    <div class="form-group">
+                        <label for="{{ form.jefe_de_familia.id_for_label }}">Jefe de Familia</label>
+                        {{ form.jefe_de_familia }}
+                    </div>
+                    <div style="margin-bottom: 28px;"></div>
+                    <div style="margin-bottom: 28px;"></div>
+                    <div class="form-group">
+                        <label for="{{ form.banco_receptor.id_for_label }}">Banco Receptor</label>
+                        {{ form.banco_receptor }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.banco_emisor.id_for_label }}">Banco Emisor</label>
+                        {{ form.banco_emisor }}
+                    </div>  
+                </div>
+                
+                <!-- Segunda columna de campos -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.numero_referencia.id_for_label }}">Número de Referencia</label>
+                        <input type="text" name="{{ form.numero_referencia.name }}" id="{{ form.numero_referencia.id }}" maxlength="6" class="form-control">
+                        <span id="error-message" style="color: red; display: none;">Solo se permiten 6 números.</span>
+                    </div>
+                    <div style="margin-bottom: 18px;"></div>
+                    <div class="form-group">
+                        <label for="{{ form.monto.id_for_label }}">Monto</label>
+                        <div class="input-group">
+                            {{ form.monto }}
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 8px;"></div>
+                    <div class="form-group">
+                        <label for="{{ form.comprobante_pago.id_for_label }}">Comprobante de Pago</label>
+                        {{ form.comprobante_pago }}
+                    </div>
+                    <div class="form-group">
+                        <label>Observaciones:</label>
+                        {{ form.observaciones }}   
+                    </div> 
+                </div>
+                
+                
+            
+            <div class="text-center">
+                <button id="guardar-pago-button" class="btn btn-primary btn-registrar-pago">Guardar Pago</button>
+                <a href="{% url 'ListaPagos' %}" class="btn btn-danger btn-registrar-pago">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    const numeroReferenciaInput = document.getElementById("{{ form.numero_referencia.id }}");
+    const errorMessage = document.getElementById("error-message");
+
+    numeroReferenciaInput.addEventListener("input", function () {
+        if (this.value.length > 6) {
+            this.value = this.value.slice(0, 6);
+            errorMessage.style.display = "block";
+        } else {
+            errorMessage.style.display = "none";
+        }
+    });
+    
+</script>
+
+
+{% endblock %}
+

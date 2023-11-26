@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ user.username }}'s Profile</title>
+</head>
+<body>
+    <h1>{{ user.username }}'s Profile</h1>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ user_creation_form.as_p }}
+        <input type="submit" value="Guardar cambios">
+    </form>
+</body>
+</html>

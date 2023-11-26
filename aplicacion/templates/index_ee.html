@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Lista Censo Personas{% endblock %}
+
+{% block contenido %}
+<style>
+    /* Ajustar el tamaño de fuente para todo el contenedor */
+    .container {
+        font-size: 20px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    /* Aumentar el tamaño de fuente para los encabezados */
+    h1 {
+        font-size: 30px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    /* Aumentar el tamaño de fuente para los elementos de la lista */
+    .list-group-item {
+        font-size: 18px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    @media (min-width: 1400px) {
+        .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+            max-width: 1400px;
+        }
+    }
+
+    .boton {
+        padding: 8px 16px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .boton-eliminar {
+        background-color: #DC3545;
+    }
+
+    /* Estilo para la columna "Acciones" */
+    .acciones-column {
+        white-space: nowrap; /* Evita que los botones se envuelvan en múltiples líneas */
+    }
+
+    /* Estilo para los botones de acciones */
+    .acciones-column a {
+        display: inline-block; /* Hace que los botones estén en línea y no se apilen */
+        margin-right: 10px; /* Agrega espacio entre los botones */
+    }
+
+    /* Elimina el margen derecho del último botón */
+    .acciones-column a:last-child {
+        margin-right: 0;
+    }
+
+    /* Reducir el tamaño de fuente de las celdas de la tabla */
+    .table th, .table td {
+        font-size: 14px; /* Ajusta el tamaño según tus necesidades */
+    }
+
+    /* Reducir el espacio entre filas de la tabla */
+    .table tbody tr {
+        line-height: 1; /* Puedes ajustar el valor según tus necesidades */
+    }
+
+    /* Agrega estilos para el botón desactivado */
+.boton-desactivado {
+    background-color: #dddddd; /* Cambia el color de fondo a gris claro o el color que prefieras */
+    color: #999999; /* Cambia el color del texto a gris más oscuro o el color que prefieras */
+    cursor: not-allowed; /* Cambia el cursor para indicar que el botón no es interactivo */
+}
+
+
+</style>
+
+<link type='text/css' href='{% static "css/style.css" %}' rel='stylesheet' />
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title titulo">Actualizacion Datos Personas</h2>
+        <div class="table-responsive" style="min-height: 50vh;">
+            <table class="table table-hover table-bordered align-middle" id="tblPersonas">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Cedula</th>
+                        <th scope="col">Jefe de Familia</th>
+                        <th scope="col">Primer Nombre</th>
+                        <th scope="col">Primer Apellido</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Edad</th>
+                        <th scope="col">Discapacidad</th>
+                        <th scope="col">Bloque</th>
+                        <th scope="col">Acciones</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for persona in personas %}
+                    <tr>
+                        <td>
+                            {% if persona.cedula %}
+                                {{ persona.cedula }}
+                            {% else %}
+                                No posee cédula
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if persona.jefe_familia %}
+                                Es Jefe de Familia
+                            {% else %}
+                                Cédula del Jefe de Familia: {{ persona.familia_r.jefe_de_familia.cedula }}
+                            {% endif %}
+                        </td>
+                        <td>{{ persona.P_nombre }}</td>
+                        <td>{{ persona.P_apellido }}</td>
+                        <td>{{ persona.get_sexo_display }}</td>
+                        <td>{{ persona.edad }}</td>
+                        <td>{% if persona.discapacidad %}
+                            Sí
+                        {% else %}
+                            No
+                        {% endif %}</td>
+                        <td>{{ persona.num_bloque }}</td>
+                        </td>
+                        <td class="acciones-column">
+                            <a href="{% url 'editar_persona' persona.idPersona %}" class="boton">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        
+                            {% if persona.jefe_familia == 1 and persona.familia_r.familia_personas.count <= 1 %}
+                                <!-- Muestra el botón de eliminar solo si es jefe de familia y tiene una sola persona relacionada -->
+                                <a href="{% url 'eliminar_persona' persona.idPersona %}" class="boton boton-eliminar" onclick="return confirmarEliminar();">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            {% elif persona.carga_familiar == 1 %}
+                                <!-- Muestra el botón de eliminar para carga familiar -->
+                                <a href="{% url 'eliminar_persona' persona.idPersona %}" class="boton boton-eliminar" onclick="return confirmarEliminar();">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            {% else %}
+                                <!-- Desactiva el botón si no cumple ninguna condición -->
+                                <a href="#" class="boton boton-eliminar boton-desactivado"  disabled>
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            {% endif %}
+                        
+                            <a href="{% url 'detalle_persona' persona.idPersona %}" class="boton">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function confirmarEliminar() {
+        return confirm("¿Estás seguro de eliminar esta persona?");
+    }
+</script>
+
+{% endblock %}

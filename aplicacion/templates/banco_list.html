@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+  <div class="container mt-0">
+    <div class="card text-center" style="max-width: 600px; margin: 0 auto;">
+      <div class="card-header">
+        <div class="titulo">
+            <h2>Lista de Bancos</h2>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'banco-create' %}" class="btn btn-success">Agregar Banco</a>
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for banco in object_list %}
+            <li class="list-group-item d-flex justify-content-between align-items-center" onmouseover="this.style.backgroundColor='#dcdcdc';" onmouseout="this.style.backgroundColor='';">
+              <div>
+                {{ banco.codigo }} - {{ banco.nombre }}
+              </div>
+              <div class="btn-group" role="group" aria-label="Acciones">
+                <a href="{% url 'banco-update' pk=banco.pk %}" class="btn btn-primary">Editar</a>
+                <a href="{% url 'banco-delete' pk=banco.pk %}" class="btn btn-danger">Eliminar</a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}

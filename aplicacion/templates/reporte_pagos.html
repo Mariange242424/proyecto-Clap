@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block contenido %}
+<style>
+    .titulo {
+        font-size: 30px; /* Tamaño más pequeño */
+        color: #fff; /* Texto en blanco */
+        margin-bottom: 20px;
+        border-bottom: 2px solid #0074cc;
+        padding-bottom: 10px;
+        text-align: center;
+      }
+
+      .card {
+        max-width: 900px;
+        margin: 60px auto;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        background-color: #fff;
+      }
+    
+    
+</style>
+<div class="card">
+    <div class="card-header">
+        <div class="titulo">Reporte de Pagos por Mes y Bloque</div>
+    </div>
+    <div class="card-body">
+        <form method="get" action="{% url 'reporte_pagos' %}">
+            <div class="input-group mb-3">
+                {{ form.mes_anio }}
+                <div class="input-group-append">
+                    <span class="input-group-text" id="calendar-button">Calendario</span>
+                </div>
+            </div>
+            {{ form.bloque }}
+            <input type="submit" value="Generar Reporte" class="btn btn-primary">
+        </form>
+
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Mes</th>
+                    <th>Bloque</th>
+                    <th>Cantidad de Pagos</th>
+                    <th>Monto Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pago in pagos_por_mes_y_bloque %}
+                    <tr>
+                        <td>{{ pago.mes|date:"F" }}</td>
+                        <td>{{ pago.jefe_de_familia__jefe_de_familia__num_bloque }}</td>
+                        <td>{{ pago.total_pagos }}</td>
+                        <td>{{ pago.monto_total|floatformat:2 }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">No hay pagos registrados.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<script>
+    $(function() {
+        $("#calendar-button").click(function() {
+            $("#id_mes_anio").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: "mm/yy",
+                onClose: function(dateText, inst) {
+                    var formattedValue = $.datepicker.formatDate("mm/yy", new Date(inst.selectedYear, inst.selectedMonth, 1));
+                    $("#id_mes_anio").val(formattedValue);
+
+                    $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+                    $(this).datepicker('hide');
+                }
+            });
+            $("#id_mes_anio").datepicker("show");
+        });
+    });
+</script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+{% endblock %}

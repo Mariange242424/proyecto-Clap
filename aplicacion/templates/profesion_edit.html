@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+
+<style>
+  .my-custom-input {
+    background-color: white; /* Fondo blanco */
+    border: 1px solid blue; /* Borde azul */
+    color: black; /* Texto en negro (opcional) */
+    width: 100%; /* Ancho completo del formulario */
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 10px; /* Margen inferior */
+  }
+</style>
+
+<div class="container mt-0">
+  <div class="card text-center" style="max-width: 600px; margin: 0 auto;">
+    <div class="card-header">
+      <div class="titulo">
+        <h2>Editar Profesión:</h2>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          {{ form.nombre_profesion.label_tag }} <!-- Etiqueta del campo -->
+          {{ form.nombre_profesion }} <!-- Campo de entrada -->
+        </div>
+        <div class="error-message-nombre-profesion" style="color: red;"></div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </form>
+    </div>
+
+    <div class="card-footer">
+      <a href="{% url 'profesion-list' %}" class="btn btn-secondary">Volver a la lista de Profesiones</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    function validarLetras(inputField) {
+      const valor = inputField.value;
+      const contieneNumeros = /\d/.test(valor);
+
+      if (contieneNumeros) {
+        inputField.value = valor.replace(/\d/g, ''); // Elimina los números del valor
+        document.querySelector(".error-message-nombre-profesion").textContent = "Este campo debe contener solo letras.";
+      } else {
+        document.querySelector(".error-message-nombre-profesion").textContent = "";
+      }
+    }
+
+    const camposDeTexto = document.querySelectorAll('input[type="text"], textarea');
+    camposDeTexto.forEach(function (campo) {
+      if (campo.name === 'nombre_profesion') {
+        campo.addEventListener("input", function () {
+          validarLetras(campo);
+        });
+      }
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Función para convertir texto a mayúsculas
+    function convertirAMayusculas(inputField) {
+        inputField.value = inputField.value.toUpperCase();
+    }
+
+    // Asocia la función al evento input de los campos de texto
+    const camposDeTexto = document.querySelectorAll('input[type="text"], textarea');
+    camposDeTexto.forEach(function (campo) {
+        campo.addEventListener("input", function () {
+            convertirAMayusculas(campo);
+        });
+    });
+});
+</script>
+
+{% endblock %}

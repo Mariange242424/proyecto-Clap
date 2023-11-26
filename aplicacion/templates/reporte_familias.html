@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<style>
+  /* Estilos generales */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Estilos para la tarjeta principal */
+  .card {
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+  }
+
+  /* Estilos para el título */
+  .titulo {
+    font-size: 30px; /* Tamaño más pequeño */
+    color: #fff; /* Texto en blanco */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #0074cc;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+
+  /* Estilos para las tablas */
+  .tabla-container {
+    margin-top: 20px;
+    overflow-x: auto; /* Agrega barras de desplazamiento horizontal si es necesario */
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  th, td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #0074cc;
+  }
+
+  th {
+    background-color: #0074cc;
+    color: #fff;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+
+  /* Estilos para los gráficos */
+  .grafico-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    flex-wrap: wrap; /* Permite que los gráficos se ajusten automáticamente en pantallas más pequeñas */
+  }
+
+  .grafico {
+    width: 220px;
+    height: 220px;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    text-align: center;
+    margin-top: 10px;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="card">
+  <div class="titulo">Reporte de Familias</div>
+  <div class="tabla-container">
+    <h3>Cantidad de Familias registradas por:</h3>
+  </div>
+
+  <!-- Contenedor de gráficos -->
+  <div class="grafico-container">
+    <!-- Gráfico para la Calle -->
+    <div>
+      <h3>Calle:</h3>
+      <canvas id="graficoCalle" class="grafico"></canvas>
+    </div>
+
+    <!-- Gráfico para el Bloque -->
+    <div>
+      <h3>Bloque:</h3>
+      <canvas id="graficoBloque" class="grafico"></canvas>
+    </div>
+
+    <!-- Gráfico para el Tipo de Vivienda -->
+    <div>
+      <h3>Vivienda:</h3>
+      <canvas id="graficoTipoVivienda" class="grafico"></canvas>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Función para generar colores únicos
+    function generarColor(index) {
+      var colores = ["#FF5733", "#3369FF", "#33FF42", "#FFC107", "#9C27B0", "#4CAF50", "#FF9800"];
+      return colores[index % colores.length];
+    }
+
+    // Filtrar calles con familias y asignar colores
+    var callesConFamilias = [{% for item in reporte_calles %}{% if item.familias_count > 0 %}"{{ item.calle.numero_calle }}",{% endif %}{% endfor %}];
+    var coloresCalles = callesConFamilias.map(function(calle, index) {
+      return generarColor(index);
+    });
+
+    // Filtrar bloques con familias y asignar colores
+    var bloquesConFamilias = [{% for item in reporte_bloques %}{% if item.familias_count > 0 %}"{{ item.bloque.numero_bloque }}",{% endif %}{% endfor %}];
+    var coloresBloques = bloquesConFamilias.map(function(bloque, index) {
+      return generarColor(index);
+    });
+
+    // Datos para el gráfico de Calle
+    var datosCalle = {
+      labels: callesConFamilias,
+      datasets: [{
+        data: [{% for item in reporte_calles %}{% if item.familias_count > 0 %}{{ item.familias_count }},{% endif %}{% endfor %}],
+        backgroundColor: coloresCalles
+      }]
+    };
+
+    var ctxCalle = document.getElementById("graficoCalle").getContext("2d");
+    var graficoCalle = new Chart(ctxCalle, {
+      type: "doughnut",
+      data: datosCalle,
+      options: {
+        responsive: false,
+        cutoutPercentage: 75,
+        legend: {
+          display: false
+        }
+      }
+    });
+
+    // Datos para el gráfico de Bloque
+    var datosBloque = {
+      labels: bloquesConFamilias,
+      datasets: [{
+        data: [{% for item in reporte_bloques %}{% if item.familias_count > 0 %}{{ item.familias_count }},{% endif %}{% endfor %}],
+        backgroundColor: coloresBloques
+      }]
+    };
+
+    var ctxBloque = document.getElementById("graficoBloque").getContext("2d");
+    var graficoBloque = new Chart(ctxBloque, {
+      type: "doughnut",
+      data: datosBloque,
+      options: {
+        responsive: false,
+        cutoutPercentage: 75,
+        legend: {
+          display: false
+        }
+      }
+    });
+
+    // Datos para el gráfico de Tipo de Vivienda
+    var datosTipoVivienda = {
+      labels: [{% for tipo, cantidad in reporte_tipos_vivienda.items %}"{{ tipo }}",{% endfor %}],
+      datasets: [{
+        data: [{% for tipo, cantidad in reporte_tipos_vivienda.items %}{{ cantidad }},{% endfor %}],
+        backgroundColor: ["#FF5733", "#3369FF", "#33FF42", "#FFC107", "#9C27B0", "#4CAF50", "#FF9800", "#00bad5", "#087275", "#ca1f9a" ]
+      }]
+    };
+
+    var ctxTipoVivienda = document.getElementById("graficoTipoVivienda").getContext("2d");
+    var graficoTipoVivienda = new Chart(ctxTipoVivienda, {
+      type: "doughnut",
+      data: datosTipoVivienda,
+      options: {
+        responsive: false,
+        cutoutPercentage: 75,
+        legend: {
+          display: false
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

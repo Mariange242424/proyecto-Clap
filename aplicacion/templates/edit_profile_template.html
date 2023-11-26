@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+<style>
+
+    /* styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 90px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.edit-profile-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.edit-profile-container h1 {
+    color: #333;
+}
+
+.edit-profile-container form {
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+.edit-profile-container form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.edit-profile-container form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+
+.edit-profile-container form button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-profile-container form button:hover {
+    background-color: #45a049;
+}
+
+</style>
+<title>Editar Perfil</title>
+
+<div class="container">
+    <div class="edit-profile-container">
+        <h1>Editar Perfil</h1>
+        
+        <!-- Formulario de edición -->
+        <form method="post" action="{% url 'edit_profile' %}">
+            {% csrf_token %}
+            
+            <!-- Mostrar errores de validación si los hay -->
+            {% if form.errors %}
+                <div style="color: red;">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
+            <!-- Renderizar el formulario de edición -->
+            {{ form.as_p }}
+
+            <!-- Botón de "Guardar Cambios" -->
+            <button type="submit">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

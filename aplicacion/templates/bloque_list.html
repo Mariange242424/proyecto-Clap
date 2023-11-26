@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+  <div class="container mt-0">
+    <div class="card text-center" style="max-width: 600px; margin: 0 auto;">
+      <div class="card-header">
+        <div class="titulo">
+          <h2>Lista de Bloques:</h2>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'bloque-create' %}" class="btn btn-success btn-block mt-2">Agregar Bloque</a>
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for bloque in object_list %}
+            <li class="list-group-item d-flex justify-content-between" onmouseover="this.style.backgroundColor='#dcdcdc';" onmouseout="this.style.backgroundColor='';">
+              <span>Bloque {{ bloque.numero_bloque }}</span>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Acciones">
+                <a href="{% url 'bloque-update' pk=bloque.pk %}" class="btn btn-primary">Editar</a>
+                <a href="{% url 'bloque-delete' pk=bloque.pk %}" class="btn btn-danger">Eliminar</a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Detalles de Persona{% endblock %}
+
+{% block contenido %}
+
+<style>
+    .card {
+        margin-top: 20px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .titulo {
+        font-size: 24px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .detalle {
+        margin-bottom: 10px;
+    }
+    .detalle p {
+        font-size: 16px;
+    }
+    .detalle strong {
+        font-weight: 600;
+        color: #007BFF;
+    }
+    
+</style>
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card col-md-8 w-75">
+        <div class="card-header">
+            <h1 class="card-title titulo">Información Completa</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detalle">
+                        <strong>Nacionalidad:</strong> {{ persona.get_nacionalidad_display }}
+                    </div>
+                    <div class="detalle">
+                        <strong>¿Posee Cedula o Pasaporte?:</strong>
+                        {% if persona.posee_cedula %}
+                            Sí
+                        {% else %}
+                            No
+                        {% endif %}
+                    </div>
+                    <div class="detalle">
+                        <strong>Cédula:</strong> {{ persona.cedula }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Primer Nombre:</strong> {{ persona.P_nombre }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Segundo Nombre:</strong> {{ persona.S_nombre }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Primer Apellido:</strong> {{ persona.P_apellido }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Segundo Apellido:</strong> {{ persona.S_apellido }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Sexo:</strong> {{ persona.get_sexo_display }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Fecha de Nacimiento:</strong> {{ persona.fecha_nacimiento }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Estado Civil:</strong> {{ persona.get_estado_civil_display }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Celular:</strong> {{ persona.celular }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Teléfono:</strong> {{ persona.telefono }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Nivel de Educación:</strong> {{ persona.nivel_educ}}
+                    </div>
+                    <div class="detalle">
+                        <strong>Profesión:</strong> {{ persona.profesion}}
+                    </div>
+                    <div class="detalle">
+                        <strong>Trabaja:</strong>
+                        {% if persona.trabaja %}
+                            Sí
+                        {% else %}
+                            No
+                        {% endif %}
+                    </div>
+                    <div class="detalle">
+                        <strong>Descripción de Trabajo:</strong>
+                        {{ persona.descripcion_trabajo|default:"Ninguna" }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Ocupación:</strong>
+                        {% if persona.ocupacion %}
+                            Sí
+                        {% else %}
+                            No
+                        {% endif %}
+                    </div>
+                    <div class="detalle">
+                        <strong>Descripción de Ocupación:</strong>
+                        {{ persona.escripcion_ocupacion|default:"Ninguna" }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Correo:</strong> {{ persona.correo }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Carga Familiar:</strong>
+                        {% if persona.carga_familiar%}
+                            Sí es Carga Familiar
+                        {% else %}
+                            No es Carga Familiar
+                        {% endif %}
+                    </div>
+                    <div class="detalle">
+                        <strong>Jefe de Familia:</strong>
+                        {% if persona.jefe_familia %}
+                            Sí es Jefe de Familia
+                        {% else %}
+                            No es Jefe de Familia
+                        {% endif %}
+                    </div>
+                    <div class="detalle">
+                        <strong>Observaciones:</strong> {{ persona.observaciones }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detalle">
+                        <strong>Discapacidad:</strong>
+                        {% if persona.discapacidad %}
+                            Sí
+                        {% else %}
+                            No
+                        {% endif %}
+                    </div>
+                    <div class="detalle">
+                        <strong>Descripción de Discapacidad:</strong>
+                        {{ persona.descripcion_discapacidad|default:"Ninguna" }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Número de Calle:</strong> {{ persona.num_calle }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Número de Bloque:</strong> {{ persona.num_bloque }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Número de Casa:</strong> {{ persona.num_casa }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Tipo de Vivienda:</strong> {{ persona.get_tipo_vivienda_display }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Bloque:</strong> {{ persona.num_bloque }}
+                    </div>
+                    <div class="detalle">
+                        <strong>Parentesco con el Jefe de Familia:</strong> {{ persona.get_parentesco_display }}
+                    </div>
+                    <div class="detalle">
+                        <div class="detalle">
+                            <strong>Familia Relacionada:</strong>
+                            {{ persona.familia_r }}
+                                                        <!-- Enlace para ver personas relacionadas -->
+                            <!-- Enlace para ver personas relacionadas -->
+                            <a href="{% url 'detalle_familia' id_familia_r %}">Ver Familia</a>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

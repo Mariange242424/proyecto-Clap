@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+  <div class="container mt-0">
+    <div class="card text-center" style="max-width: 600px; margin: 0 auto;">
+      <div class="card-header">
+        <div class="titulo">
+          <h2>Bloque creado exitosamente</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <!-- Puedes agregar aquí cualquier contenido adicional o redireccionar a otra página -->
+        <a href="{% url 'bloque-list' %}" class="btn btn-secondary btn-block mt-2">Volver a la lista de Bloques</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,654 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Agregar Persona{% endblock %}
+
+{% block contenido %}
+<style>
+    /* Estilos generales */
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Estilos para campos de entrada */
+/* Estilos para campos de entrada */
+input[type="text"],
+input[type="date"],
+select,
+textarea,
+input[type="email"],
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #004cff;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #007bff;
+    background-color: #f7f7f7;
+}
+
+
+
+    /* Estilos para botones */
+    .btn-cancelar {
+        background-color: #ccc;
+        color: #333;
+        border: none;
+        padding: 10px 20px;
+        margin-right: 10px;
+        border-radius: 5px;
+    }
+
+    .btn-aceptar {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+
+
+
+    /* Estilo para el select mismo */
+    .select2-selection__rendered {
+        border: 1px solid #004cff;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 16px;
+        color: #333;
+        background-color: #f7f7f7;
+    }
+
+    /* Estilos específicos para campos de selección */
+    select[name="discapacidad"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #004cff;
+        border-radius: 5px;
+    }
+
+/* Estilos específicos para los campos de textarea */
+textarea[name="observaciones"],
+textarea[name="descripcion_trabajo"],
+textarea[name="descripcion_ocupacion"] {
+    width: 100%; /* Ajusta el ancho según tus preferencias */
+    height: 100px; /* Ajusta la altura según tus preferencias */
+    font-size: 14px; /* Ajusta el tamaño del texto según tus preferencias */
+}
+
+#id_num_bloque {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #004cff;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #007bff;
+    background-color: #f7f7f7;
+}
+
+
+
+    /* Estilos adicionales según tus preferencias */
+</style>
+
+
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">
+  <strong>Error en el formulario:</strong>
+  {% for field, errors in form.errors.items %}
+    <p>{{ field }}:
+      {% for error in errors %}
+        {{ error }}
+      {% endfor %}
+    </p>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card col-md-8 w-75 form-container">
+        <div class="titulo">Registrar Persona</div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <h3>Datos Personales</h3>
+                    <hr> <!-- Separador entre secciones -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="Nacionalidad">Nacionalidad:</label>
+                            {{ form.nacionalidad }}
+                        </div>                          
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="posee_cedula">¿Posee cédula o pasaporte?</label>
+                            <select class="form-control" id="{{ form.posee_cedula.id_for_label }}" name="{{ form.posee_cedula.html_name }}">
+                                <option value="1">Sí</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>                       
+                        <div class="mb-3" id="div_cedula" style="display: none;">
+                            <label for="cedula">Cédula o Pasaporte:</label>
+                            <input type="text" class="form-control" id="{{ form.cedula.id_for_label }}" name="{{ form.cedula.html_name }}" value="{{ form.cedula.value|default:'' }}" required oninput="validarNumeros(this)" maxlength="12">
+                            <div class="error-message" style="color: red;"></div>
+                        </div>
+                </div>
+                <div class="row">
+                    
+                    <hr> <!-- Separador entre secciones -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="P_nombre">Primer Nombre:</label>
+                            {{ form.P_nombre }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellidos">Primer Apellido:</label>
+                            {{ form.P_apellido }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Sexo">Sexo:</label>
+                            {{ form.sexo }}
+                        </div>                    
+                        <div class="mb-3">
+                            <label for="discapacidad">Discapacidad:</label>
+                            {{ form.discapacidad }}
+                        </div>
+                        
+                        <div class="mb-3" id="descripcion-discapacidad" style="display: none;">
+                            {{ form.descripcion_discapacidad.label_tag }}
+                            <textarea class="form-control border-dark" id="{{ form.descripcion_discapacidad.id_for_label }}" name="{{ form.descripcion_discapacidad.html_name }}" rows="4">{{ form.descripcion_discapacidad.value|default:'' }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono">Telefono:</label>
+                            <input type="text" class="form-control" id="{{ form.telefono.id_for_label }}" name="{{ form.telefono.html_name }}" value="{{ form.telefono.value|default:'' }}" required oninput="validarNumeros(this)" maxlength="15">
+                            <div class="error-message" style="color: red;"></div>
+                        </div>  
+                        <div class="mb-3">
+                            <label for="correo">Correo Electrónico:</label>
+                            {{ form.correo }}
+                        </div>
+                        
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="S_nombre">Segundo Nombre:</label>
+                            {{ form.S_nombre }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellidos">Segundo Apellido:</label>
+                            {{ form.S_apellido }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha_nacimiento">Fecha De Nacimiento:</label>
+                            <input type="date" class="form-control" id="{{ form.fecha_nacimiento.id_for_label }}" name="{{ form.fecha_nacimiento.html_name }}" value="{{ form.fecha_nacimiento.value|default:'' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado_civil">Estado Civil:</label>
+                            {{ form.estado_civil }}
+                        </div>
+                        <div style="margin-bottom: 28px;"></div>
+                        <div class="mb-3">
+                            <label for="celular">celular:</label>
+                            <input type="text" class="form-control" id="{{ form.celular.id_for_label }}" name="{{ form.celular.html_name }}" value="{{ form.celular.value|default:'' }}" required oninput="validarNumeros(this)" maxlength="15">
+                            <div class="error-message" style="color: red;"></div>
+                        </div>                    
+                    </div>
+                    <div class="row">
+                        <h3>Profesión u Ocupación</h3>
+                        <hr> <!-- Separador entre secciones -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="Nivel_educ">Nivel de Educacion:</label>
+                                {{ form.nivel_educ }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.trabaja.id_for_label }}">Trabaja:</label>
+                                {{ form.trabaja }}
+                            </div>
+                            
+                            <div class="mb-3" id="descripcion-trabajo" style="display: none;">
+                                {{ form.descripcion_trabajo.label_tag }}
+                                <textarea class="form-control border-dark" id="{{ form.descripcion_trabajo.id_for_label }}" name="{{ form.descripcion_trabajo.html_name }}" rows="4">{{ form.descripcion_trabajo.value|default:'' }}</textarea>
+                            </div>                      
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="Profesion">Profesión:</label>
+                                {{ form.profesion }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="ocupacion">Ocupación:</label>
+                                {{ form.ocupacion }}
+                            </div>
+                            
+                            <div class="mb-3" id="descripcion-ocupacion" style="display: none;">
+                                {{ form.descripcion_ocupacion.label_tag }}
+                                <textarea class="form-control border-dark" id="{{ form.descripcion_ocupacion.id_for_label }}" name="{{ form.descripcion_ocupacion.html_name }}" rows="4">{{ form.descripcion_ocupacion.value|default:'' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        
+                        <hr> <!-- Separador entre secciones -->
+                        <div class="col-md-6">
+                            <div class="mb-3" id="jefe-familia-container">
+                                <label for="jefe_familia" id="{{ form.jefe_familia.id_for_label }}" name="{{ form.jefe_familia.html_name }}">¿Es Jefe de Familia?</label>
+                                {{ form.jefe_familia }}
+                            </div> 
+                            <div id="error-edad-jefe" style="color: red;"></div>
+                           
+                            <div>
+                                <div class="mb-3" id="familia-r-field">
+                                    <label for="{{ form.familia_r.id_for_label }}">Seleccione su Jefe de Familia</label>
+                                    {{ form.familia_r }}
+                                </div>
+                                {% if not form.familia_r.queryset %}
+                                    <p class="text-warning">Algunos jefes de familia ya han alcanzado su número máximo de cargas. Deberá considerar crear una nueva familia.</p>
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3" id="carga-familiar" style="display: none; ">
+                                <label for="carga_familiar" id="{{ form.carga_familiar.id_for_label }}" name="{{ form.carga_familiar.html_name }}">¿Pertenece a Carga Familiar?</label>
+                                {{ form.carga_familiar }}             
+                            </div>                          
+                            <div class="mb-3" id="parentesco-field" style="display: none; ">
+                                <label for="parentesco">Parentesco:</label>
+                                {{ form.parentesco }}
+                            </div> 
+                        </div>
+                            <!-- Sección de Lugar de Residencia -->
+                            <h3>Información de Residencia</h3>
+                            <hr> <!-- Separador entre secciones -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="num_calle">Número de Calle:</label>
+                                    {{ form.num_calle }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tipo_vivienda">Tipo de Vivienda:</label>
+                                    {{ form.tipo_vivienda }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="num_casa">Número de Casa:</label>
+                                    <input type="text" class="form-control" id="{{ form.num_casa.id_for_label }}" name="{{ form.num_casa.html_name }}" value="{{ form.num_casa.value|default:'' }}" required oninput="validarNumeros(this)">
+                                    <div class="error-message" style="color: red;"></div>
+                                </div>                            
+                                <div class="mb-3">
+                                    <label for="num_bloque">Bloque:</label>
+                                    {{ form.num_bloque }}
+                                </div>    
+                            </div>
+                            <hr> <!-- Separador entre secciones -->
+                            <div class="mb-3" style="width: 50%;">
+                                <label for="Observaciones_persona">Observaciones Persona:</label>
+                                {{ form.observaciones }}
+                            </div>
+                    <div class="row justify-content-between">
+                        <div class="col-md-6">
+                            <a href="#" onclick="window.history.back()" class="btn btn-cancelar btn-sm w-100">
+                                <i class="fas fa-arrow-left"></i> Volver
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-aceptar btn-sm w-100">Aceptar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ... Código JavaScript ... -->
+
+
+
+                
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Manejo de campos de teléfono
+            const telefonoField = document.querySelector("#{{ form.telefono.id_for_label }}");
+            const celularField = document.querySelector("#{{ form.celular.id_for_label }}");
+            const telefonoErrorMessage = telefonoField.nextElementSibling;
+            const celularErrorMessage = celularField.nextElementSibling;
+    
+            // Función para manejar el cambio en la opción de discapacidad
+            function manejarCambioDiscapacidad() {
+                if ($(this).val() === "True") {
+                    $("#descripcion-discapacidad").show();
+                } else {
+                    $("#descripcion-discapacidad").hide();
+                }
+            }
+    
+            // Función para manejar el cambio en la opción de ocupación
+            function manejarCambioOcupacion() {
+                if ($(this).val() === "True") {
+                    $("#descripcion-ocupacion").show();
+                } else {
+                    $("#descripcion-ocupacion").hide();
+                }
+            }
+    
+            // Función para manejar el cambio en la opción de trabaja
+            function manejarCambioTrabaja() {
+                if ($(this).val() === "True") {
+                    $("#descripcion-trabajo").show();
+                } else {
+                    $("#descripcion-trabajo").hide();
+                }
+            }
+    
+            // Ocultar las descripciones de discapacidad, ocupación y trabajo al cargar la página
+            $("#descripcion-discapacidad").hide();
+            $("#descripcion-ocupacion").hide();
+            $("#descripcion-trabajo").hide();
+    
+            // Manejo del cambio en la opción de discapacidad al cargar la página
+            $("input[name='discapacidad']").change(manejarCambioDiscapacidad);
+    
+            // Manejo del cambio en la opción de ocupación al cargar la página
+            $("input[name='ocupacion']").change(manejarCambioOcupacion);
+    
+            // Manejo del cambio en la opción de trabaja al cargar la página
+            $("input[name='trabaja']").change(manejarCambioTrabaja);
+        });
+
+        function validarNumeros(inputField) {
+            const valor = inputField.value;
+            const esNumero = /^\d+$/.test(valor);
+    
+            if (!esNumero) {
+                // Muestra un mensaje de error
+                inputField.nextElementSibling.textContent = "Este campo debe contener solo números.";
+            } else {
+                // Borra el mensaje de error si es válido
+                inputField.nextElementSibling.textContent = "";
+            }
+        }
+    
+    // Función para validar que un campo contenga solo números
+    function validarNumeros(inputField) {
+        const valor = inputField.value;
+        const esNumero = /^\d+$/.test(valor);
+
+        if (!esNumero) {
+            // Muestra un mensaje de error
+            inputField.nextElementSibling.textContent = "Este campo debe contener solo números.";
+        } else {
+            // Borra el mensaje de error si es válido
+            inputField.nextElementSibling.textContent = "";
+        }
+    }
+
+
+    function validarNumeros(inputField) {
+        // Obtiene el valor actual del campo
+        const valor = inputField.value;
+
+        // Filtra el valor para que solo contenga números
+        const valorFiltrado = valor.replace(/\D/g, '');
+
+        // Actualiza el valor del campo con la versión filtrada
+        inputField.value = valorFiltrado;
+
+        // Muestra un mensaje de error si se ingresan caracteres no numéricos
+        if (valor !== valorFiltrado) {
+            inputField.nextElementSibling.textContent = "Este campo solo permite números.";
+        } else {
+            inputField.nextElementSibling.textContent = ""; // Borra el mensaje de error si es válido
+        }
+    }
+
+    function manejarVisibilidadCedula() {
+        const poseeCedulaField = document.querySelector("#{{ form.posee_cedula.id_for_label }}");
+        const divCedula = document.querySelector("#div_cedula");
+
+        if (poseeCedulaField.value === "0") {
+            divCedula.style.display = "none"; // Oculta el campo de cédula
+        } else {
+            divCedula.style.display = "block"; // Muestra el campo de cédula
+        }
+    }
+
+    // Llama a la función al cargar la página
+    document.addEventListener("DOMContentLoaded", manejarVisibilidadCedula);
+
+    // Asocia la función al evento change del campo "¿Posee cédula?"
+    const poseeCedulaField = document.querySelector("#{{ form.posee_cedula.id_for_label }}");
+    poseeCedulaField.addEventListener("change", manejarVisibilidadCedula);
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Función para manejar el cambio en la opción "Jefe de Familia"
+        function manejarCambioJefeFamilia() {
+            if (document.querySelector('select[name="jefe_familia"]').value === "1") {
+                document.getElementById("carga-familiar").style.display = "none";
+            } else {
+                document.getElementById("carga-familiar").style.display = "block";
+            }
+        }
+    
+        // Llama a la función al cargar la página
+        manejarCambioJefeFamilia();
+    
+        // Asocia la función al evento change del campo "Jefe de Familia"
+        const jefeFamiliaSelect = document.querySelector('select[name="jefe_familia"]');
+        jefeFamiliaSelect.addEventListener("change", manejarCambioJefeFamilia);
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Función para manejar el cambio en la opción de "Carga Familiar"
+        function manejarCambioCargaFamiliar() {
+            const cargaFamiliarSelect = document.querySelector('select[name="carga_familiar"]');
+            const familiaRField = document.getElementById("familia-r-field");
+    
+            if (cargaFamiliarSelect.value === "1") {
+                // Si "Carga Familiar" es "Sí", muestra los campos "Parentesco" y "Familiar R"
+                document.getElementById("parentesco-field").style.display = "block";
+                familiaRField.style.display = "block";
+    
+                // Inicializar Select2 nuevamente
+                const familiaRSelect = familiaRField.querySelector('select');
+                $(familiaRSelect).select2({
+                    width: '100%' // Ajusta el ancho según tus necesidades
+                });
+            } else {
+                // Si "Carga Familiar" es "No", oculta los campos "Parentesco" y "Familia R"
+                document.getElementById("parentesco-field").style.display = "none";
+                familiaRField.style.display = "none";
+            }
+        }
+    
+        // Llama a la función al cargar la página
+        manejarCambioCargaFamiliar();
+    
+        // Asocia la función al evento change del campo "Carga Familiar"
+        const cargaFamiliarSelect = document.querySelector('select[name="carga_familiar"]');
+        cargaFamiliarSelect.addEventListener("change", manejarCambioCargaFamiliar);
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Función para manejar el cambio en la opción "Carga Familiar"
+        function manejarCambioCargaFamiliar() {
+            const cargaFamiliarSelect = document.querySelector('select[name="carga_familiar"]');
+            const jefeFamiliaContainer = document.querySelector('#jefe-familia-container');  // Agrega un ID al contenedor
+    
+            if (cargaFamiliarSelect.value === "1") {
+                // Si "Pertenece a Carga Familiar" es "Sí", ocultar el contenedor del campo "¿Es Jefe de Familia?"
+                jefeFamiliaContainer.style.display = "none";
+            } else {
+                // Si "Pertenece a Carga Familiar" es "No", mostrar el contenedor del campo "¿Es Jefe de Familia?"
+                jefeFamiliaContainer.style.display = "block";
+            }
+        }
+    
+        // Llama a la función al cargar la página
+        manejarCambioCargaFamiliar();
+    
+        // Asocia la función al evento change del campo "Pertenece a Carga Familiar"
+        const cargaFamiliarSelect = document.querySelector('select[name="carga_familiar"]');
+        cargaFamiliarSelect.addEventListener("change", manejarCambioCargaFamiliar);
+    });
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        // Función para validar que un campo contenga solo letras
+        function validarLetras(inputField) {
+            const valor = inputField.value;
+            const contieneNumeros = /\d/.test(valor);
+
+            if (contieneNumeros) {
+                inputField.value = valor.replace(/\d/g, ''); // Elimina los números del valor
+            }
+        }
+
+        // Asocia la función al evento input de los campos de nombres y apellidos
+        const primerNombreField = document.querySelector('#{{ form.P_nombre.id_for_label }}');
+        const segundoNombreField = document.querySelector('#{{ form.S_nombre.id_for_label }}');
+        const primerApellidoField = document.querySelector('#{{ form.P_apellido.id_for_label }}');
+        const segundoApellidoField = document.querySelector('#{{ form.S_apellido.id_for_label }}');
+
+        primerNombreField.addEventListener("input", function () {
+            validarLetras(primerNombreField);
+        });
+
+        segundoNombreField.addEventListener("input", function () {
+            validarLetras(segundoNombreField);
+        });
+
+        primerApellidoField.addEventListener("input", function () {
+            validarLetras(primerApellidoField);
+        });
+
+        segundoApellidoField.addEventListener("input", function () {
+            validarLetras(segundoApellidoField);
+        });
+    });
+
+    function validarEdadJefeFamilia() {
+        const fechaNacimientoField = document.querySelector("#{{ form.fecha_nacimiento.id_for_label }}");
+        const jefeFamiliaSelect = document.querySelector('select[name="jefe_familia"]');
+        const errorMensaje = document.querySelector("#error-edad-jefe");
+    
+        // Obtiene la fecha de nacimiento ingresada por el usuario
+        const fechaNacimiento = new Date(fechaNacimientoField.value);
+        const hoy = new Date();
+        const edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    
+        // Verifica si la persona es menor de 18 años y se ha seleccionado como jefe de familia
+        if (edad < 18 && jefeFamiliaSelect.value === "1") {
+            errorMensaje.textContent = "Una persona menor de 18 años no puede ser jefe de familia.";
+            jefeFamiliaSelect.value = "0"; // Cambia la selección a "No"
+    
+            // Oculta el mensaje de error después de 5 segundos
+            setTimeout(function () {
+                errorMensaje.textContent = "";
+            }, 5000); // 5000 milisegundos (5 segundos)
+        } else {
+            errorMensaje.textContent = "";
+        }
+    }
+    // Llama a la función al cargar la página
+    document.addEventListener("DOMContentLoaded", validarEdadJefeFamilia);
+    
+    // Asocia la función al evento change de la fecha de nacimiento y la selección del jefe de familia
+    const fechaNacimientoField = document.querySelector("#{{ form.fecha_nacimiento.id_for_label }}");
+    const jefeFamiliaSelect = document.querySelector('select[name="jefe_familia"]');
+    fechaNacimientoField.addEventListener("change", validarEdadJefeFamilia);
+    jefeFamiliaSelect.addEventListener("change", validarEdadJefeFamilia);
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        // Función para convertir texto a mayúsculas
+        function convertirAMayusculas(inputField) {
+            inputField.value = inputField.value.toUpperCase();
+        }
+
+        // Asocia la función al evento input de los campos de texto
+        const camposDeTexto = document.querySelectorAll('input[type="text"], textarea');
+        camposDeTexto.forEach(function (campo) {
+            campo.addEventListener("input", function () {
+                convertirAMayusculas(campo);
+            });
+        });
+    });
+
+   function validarTelefono(inputField) {
+        const valor = inputField.value;
+        const expresionRegular = /^02\d{9}$/;  // Números de teléfono en Venezuela inician con 02 y tienen 11 dígitos
+
+        if (!expresionRegular.test(valor)) {
+            // Muestra un mensaje de error si el número no cumple con el formato esperado
+            inputField.nextElementSibling.textContent = "Número de teléfono no válido para Venezuela.";
+        } else {
+            // Borra el mensaje de error si es válido
+            inputField.nextElementSibling.textContent = "";
+        }
+    }
+
+    // Función para validar un número de celular en Venezuela
+    function validarCelular(inputField) {
+        const valor = inputField.value;
+        const expresionRegular = /^04\d{9}$/;  // Números de celular en Venezuela inician con 04 y tienen 11 dígitos
+
+        if (!expresionRegular.test(valor)) {
+            // Muestra un mensaje de error si el número no cumple con el formato esperado
+            inputField.nextElementSibling.textContent = "Número de celular no válido para Venezuela.";
+        } else {
+            // Borra el mensaje de error si es válido
+            inputField.nextElementSibling.textContent = "";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Asocia la función al evento input del campo de teléfono
+        const telefonoField = document.querySelector("#{{ form.telefono.id_for_label }}");
+        telefonoField.addEventListener("input", function () {
+            validarTelefono(telefonoField);
+        });
+
+        // Asocia la función al evento input del campo de celular
+        const celularField = document.querySelector("#{{ form.celular.id_for_label }}");
+        celularField.addEventListener("input", function () {
+            validarCelular(celularField);
+        });
+    });
+
+    document.getElementById("id_familia_r").addEventListener("change", function() {
+        // Lógica para obtener la información del jefe de familia seleccionado
+        var selectedFamilia = this.options[this.selectedIndex];
+        var casa = selectedFamilia.getAttribute("data-casa");
+        var calle = selectedFamilia.getAttribute("data-calle");
+        var bloque = selectedFamilia.getAttribute("data-bloque");
+    
+        // Autocompletar los campos correspondientes
+        document.getElementById("id_num_casa").value = casa;
+        document.getElementById("id_num_calle").value = calle;
+        document.getElementById("id_num_bloque").value = bloque;
+    });
+
+</script>
+
+
+
+    
+    
+        
+
+{% endblock %}
+
+

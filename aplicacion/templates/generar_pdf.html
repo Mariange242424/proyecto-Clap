@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Generar PDF{% endblock %}
+{% block contenido %}
+<div class="container">
+    <div class="card my-4">
+        <div class="card-body">
+            <div class="titulo">Generar PDF</div>
+            <p class="lead">Se generará un PDF para el bloque {{ selected_bloque }}.</p>
+            <a href="{% url 'generar_pdf_jefes_familia' selected_bloque %}" target="_blank" class="btn btn-success">
+                <i class="fas fa-download"></i> Descargar PDF
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

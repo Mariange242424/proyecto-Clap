@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}pdf{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="titulo">Jefes de Familia con Carga Familiar por Bloque</div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <label for="bloque" class="mb-2">Selecciona un bloque:</label>
+                        <select name="bloque" id="bloque" class="form-select mb-3">
+                            {% for bloque in bloques %}
+                            <option value="{{ bloque }}">{{ bloque }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary">Generar PDF</button>
+                    </form>
+                </div>
+            </div>
+
+            {% if selected_bloque %}
+                <div class="mt-3 text-center">
+                    <a href="{% url 'generar_pdf_carga_familiar' selected_bloque %}" target="_blank" class="btn btn-success">
+                        <i class="fas fa-download"></i> Descargar PDF
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

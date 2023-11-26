@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Lista Censo Personas{% endblock %}
+
+{% block contenido %}
+<style>
+    /* Ajustar el tamaño de fuente para todo el contenedor */
+    .container {
+        font-size: 20px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    /* Aumentar el tamaño de fuente para los encabezados */
+    h1 {
+        font-size: 30px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    /* Aumentar el tamaño de fuente para los elementos de la lista */
+    .list-group-item {
+        font-size: 18px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    @media (min-width: 1400px) {
+        .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+            max-width: 1400px;
+        }
+    }
+
+    /* Estilo para la columna "Acciones" */
+    .acciones-column {
+        white-space: nowrap; /* Evita que los botones se envuelvan en múltiples líneas */
+    }
+
+    /* Estilo para los botones de acciones */
+    .acciones-column a {
+        display: inline-block; /* Hace que los botones estén en línea y no se apilen */
+        margin-right: 10px; /* Agrega espacio entre los botones */
+    }
+
+    /* Elimina el margen derecho del último botón */
+    .acciones-column a:last-child {
+        margin-right: 0;
+    }
+
+    /* Reducir el tamaño de fuente de las celdas de la tabla */
+    .table th, .table td {
+        font-size: 14px; /* Ajusta el tamaño según tus necesidades */
+    }
+
+    /* Reducir el espacio entre filas de la tabla */
+    .table tbody tr {
+        line-height: 1; /* Puedes ajustar el valor según tus necesidades */
+    }
+    /* Define una clase personalizada para los botones */
+.custom-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+}
+
+.card {
+    margin: 20px auto; /* Centrar la tarjeta horizontalmente */
+    max-width: 1200px; /* Ajusta este valor según tus necesidades */
+    width: 70%; /* La tarjeta ocupa el 100% del ancho disponible */
+    padding: 15px; /* Ajusta el espacio interno según tus necesidades */
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+</style>
+
+
+
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title titulo">Listado Familias Registradas</h2>
+        <div class="table-responsive" style="min-height: 50vh;">
+            <table class="table table-hover table-bordered align-middle" id="tblPersonas">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Jefe de Familia</th>
+                        <th>Calle</th>
+                        <th>Número de Casa</th>
+                        <th>Bloque</th>
+                        <th>Miembros</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for data in familias_con_num_miembros %}
+                    {% with familia=data.familia %}
+                        {% if familia.jefe_de_familia and data.num_miembros > 0 %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'detalle_familia' familia.idfamilia %}">{{ familia.jefe_de_familia.P_nombre }}</a>
+                                </td>
+                                <td>{{ familia.jefe_de_familia.num_calle }}</td>
+                                <td>{{ familia.jefe_de_familia.num_casa }}</td>
+                                <td>{{ familia.jefe_de_familia.num_bloque }}</td>
+                                <td>
+                                    {% if data.num_miembros < 6 %}
+                                        <span style="color: green;">{{ data.num_miembros }}</span>
+                                    {% else %}
+                                        <span style="color: red;">{{ data.num_miembros }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endwith %}
+                {% endfor %}
+                
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

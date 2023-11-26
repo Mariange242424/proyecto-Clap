@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+  <div class="container mt-0">
+    <div class="card text-center" style="max-width: 600px; margin: 0 auto;">
+      <div class="card-header">
+        <div class="titulo">
+          <h2>Agregar Banco:</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            {{ form.codigo.label_tag }}
+            <input type="text" name="codigo" class="form-control" value="{{ form.codigo.value|default:'' }}" oninput="validarNumeros(this)">
+            <div class="error-message-codigo" style="color: red;"></div>
+          </div>
+          <div class="mb-3">
+            {{ form.nombre.label_tag }}
+            <input type="text" name="nombre" class="form-control" value="{{ form.nombre.value|default:'' }}" oninput="validarLetras(this)">
+            <div class="error-message-nombre" style="color: red;"></div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+        </form>
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'banco-list' %}" class="btn btn-secondary btn-block mt-2">Volver a la lista de Bancos</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function validarNumeros(inputField) {
+            const valor = inputField.value;
+            const contieneLetras = /[a-zA-Z]/.test(valor);
+
+            if (contieneLetras) {
+                inputField.value = valor.replace(/[a-zA-Z]/g, ''); // Elimina las letras del valor
+                // Muestra un mensaje de error
+                document.querySelector(".error-message-codigo").textContent = "Este campo debe contener solo números.";
+            } else {
+                // Borra el mensaje de error si es válido
+                document.querySelector(".error-message-codigo").textContent = "";
+            }
+        }
+
+        function validarLetras(inputField) {
+            const valor = inputField.value;
+            const contieneNumeros = /\d/.test(valor);
+
+            if (contieneNumeros) {
+                inputField.value = valor.replace(/\d/g, ''); // Elimina los números del valor
+                // Muestra un mensaje de error
+                document.querySelector(".error-message-nombre").textContent = "Este campo debe contener solo letras.";
+            } else {
+                // Borra el mensaje de error si es válido
+                document.querySelector(".error-message-nombre").textContent = "";
+            }
+        }
+
+        const camposDeTexto = document.querySelectorAll('input[type="text"], textarea');
+        camposDeTexto.forEach(function (campo) {
+            if (campo.name === 'codigo') {
+                campo.addEventListener("input", function () {
+                    validarNumeros(campo);
+                });
+            } else if (campo.name === 'nombre') {
+                campo.addEventListener("input", function () {
+                    validarLetras(campo);
+                });
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // Función para convertir texto a mayúsculas
+      function convertirAMayusculas(inputField) {
+          inputField.value = inputField.value.toUpperCase();
+      }
+
+      // Asocia la función al evento input de los campos de texto
+      const camposDeTexto = document.querySelectorAll('input[type="text"], textarea');
+      camposDeTexto.forEach(function (campo) {
+          campo.addEventListener("input", function () {
+              convertirAMayusculas(campo);
+          });
+      });
+  });
+</script>
+{% endblock %}

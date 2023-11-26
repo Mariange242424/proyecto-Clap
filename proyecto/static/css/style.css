@@ -1,0 +1,43 @@
+/* Estilo para el contenido principal */
+.content {
+    margin-top: 20px; /* Ajusta el margen superior según tus preferencias */
+    padding: 20px; /* Opcional: Agregar relleno al contenido */
+}
+
+/* Estilos base para pantallas pequeñas */
+body {
+    font-size: 16px;
+}
+
+/* Media query para pantallas medianas */
+@media (min-width: 768px) {
+    body {
+        font-size: 18px;
+    }
+}
+
+/* Media query para pantallas grandes */
+@media (min-width: 1024px) {
+    body {
+        font-size: 20px;
+    }
+}
+
+
+body {
+    background-color: #e5e5e5; /* Cambia #f0f0f0 al color que desees */
+}
+
+
+.titulo {
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    color: #ffffff;
+    font-size: 40px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    margin-top: 20px; /* Agregamos margen superior para separar el título de los botones */
+}
+
+

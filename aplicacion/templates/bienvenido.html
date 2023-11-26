@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Bienvenido{% endblock %}
+
+{% block contenido %}
+
+<style>
+
+
+
+        .containerr {
+            text-align: center;
+            margin-top: 30px;
+            display: flex; /* Utilizamos flexbox para colocar los elementos en una fila */
+            justify-content: space-around; /* Distribuye los elementos con espacio alrededor */
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan a la siguiente línea si no caben en la misma fila */
+        }
+
+        .box {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            flex: 1; /* Los elementos ocuparán un espacio igual en la fila */
+            max-width: 300px; /* Establece un ancho máximo para evitar que se estiren demasiado */
+        }
+
+        .box i {
+            font-size: 48px;
+            color: #007BFF;
+        }
+
+        .box h4 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        .box p {
+            font-size: 18px;
+        }
+
+        .title-container {
+    text-align: center; /* Centro el texto horizontalmente */
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 15vh; /* Ajusta la altura según tus necesidades */
+    margin-top: 20px;
+}
+
+.title {
+    font-family: Arial, sans-serif;
+    font-size: 70px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #007BFF;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.box {
+    /* Resto de tus estilos ... */
+    border: 2px solid #007bff; /* Borde azul neon (puedes cambiar este valor) */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); /* Sombra azul neon (puedes cambiar este valor) */
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 40px; /* Cambia el tamaño del texto para dispositivos más pequeños */
+        margin-bottom: 20px; /* Ajusta el margen inferior si es necesario */
+    }
+}
+</style>
+
+
+
+
+
+<div class="title-container">
+    <h1 class="title">¡Bienvenido!</h1>
+</div>
+
+<div class="containerr">
+    <div class="box">
+        <i class="fas fa-users"></i>
+        <h4>Familias Registradas</h4>
+        <p id="familiesCount">Cargando...</p>
+    </div>
+    <div class="box">
+        <i class="fas fa-user"></i>
+        <h4>Habitantes Registrados</h4>
+        <p id="residentsCount">Cargando...</p>
+    </div>
+    <div class="box">
+        <i class="fas fa-money-bill-wave"></i>
+        <h4>Pagos Registrados</h4>
+        <p id="paymentsCount">Cargando...</p>
+    </div>
+</div>
+
+
+
+
+<a href="{% url 'admin:index' %}">
+    <button>Ir a la Interfaz de Administración</button>
+</a>
+
+
+{% comment %}
+    <!-- Enlace para activar la copia de seguridad y descargar el archivo -->
+    <a href="{% url 'backup' %}" download>Realizar Copia de Seguridad</a>
+    
+    <!-- O formulario para activar la copia de seguridad y descargar el archivo -->
+    <form action="{% url 'backup' %}" method="get">
+        <button type="submit" download>Realizar Copia de Seguridad</button>
+    </form>
+    
+    
+    <form method="post" action="/restore/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="backup_file">
+        <button type="submit">Restaurar</button>
+    </form>
+    
+    
+{% endcomment %}
+
+
+<script>
+    // Realizar las peticiones AJAX al backend para obtener las cantidades
+    $(document).ready(function () {
+        $.get("/api/families_count", function (data) {
+            $("#familiesCount").text(data.count);
+        });
+        $.get("/api/residents_count", function (data) {
+            $("#residentsCount").text(data.count);
+        });
+        $.get("/api/payments_count", function (data) {
+            $("#paymentsCount").text(data.count);
+        });
+    });
+
+
+</script>
+{% endblock %}

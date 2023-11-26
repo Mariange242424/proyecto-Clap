@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+  <div class="container mt-4">
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+      <div class="card-header">
+        <div class="titulo">
+          <h2>Lista de Calles:</h2>
+        </div>
+      </div>
+      <div class="card-footer text-center">
+        <a href="{% url 'calle-create' %}" class="btn btn-success btn-block mt-2">Agregar Calle</a>
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for calle in object_list %}
+            <li class="list-group-item d-flex justify-content-between align-items-center" onmouseover="this.style.backgroundColor='#dcdcdc';" onmouseout="this.style.backgroundColor='';">
+              Calle: {{ calle.numero_calle }}
+              <div class="btn-group btn-group-sm">
+                <a href="{% url 'calle-update' pk=calle.pk %}" class="btn btn-primary">Editar</a>
+                <a href="{% url 'calle-delete' pk=calle.pk %}" class="btn btn-danger">Eliminar</a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}

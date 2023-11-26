@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+  <div class="container mt-0">
+    <div class="card text-center" style="max-width: 600px; margin: 0 auto;">
+      <div class="card-header">
+        <div class="titulo">
+          <h2>Editar Bloque:</h2>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="post" class="needs-validation" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="{{ form.numero_bloque.id_for_label }}" class="form-label">Número de Bloque</label>
+            <input type="text"
+                   name="{{ form.numero_bloque.name }}"
+                   value="{{ form.numero_bloque.value|default:'' }}"
+                   class="form-control {% if form.numero_bloque.errors %}is-invalid{% endif %}"
+                   onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+            <div class="invalid-feedback">
+              {{ form.numero_bloque.errors }}
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+        </form>
+        <div class="mt-3"> <!-- Separación entre el formulario y el enlace -->
+          <hr class="my-3"> <!-- Separador horizontal -->
+          <a href="{% url 'bloque-list' %}" class="btn btn-secondary btn-block mt-2">Volver a la lista de Bloques</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block contenido %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #007BFF, #00BFFF);
+            text-align: center;
+        }
+
+        h1 {
+            color:#fff;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 500px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+
+
+    <h1>Registro de Usuario:</h1>
+    {% load crispy_forms_tags %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <h2>Complete todos los campos</h2>
+        
+
+        {{form | crispy}}
+
+        
+        <input type="submit" value="Registrarse">
+    </form>
+
+{% endblock %}

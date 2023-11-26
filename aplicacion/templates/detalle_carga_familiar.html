@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block contenido %}
+
+<style>
+    /* Estilos generales */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    /* Estilo para la tarjeta */
+    .card {
+        margin: 20px auto; /* Esto centrará la tarjeta horizontalmente */
+        max-width: 1500px; /* Puedes ajustar este valor según tus necesidades */
+        width: 100%; /* Esto hará que la tarjeta ocupe el 100% del ancho disponible */
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+
+    /* Estilos para el encabezado */
+    h1 {
+        text-align: center;
+        font-size: 36px;
+        color: #fff;
+        background: linear-gradient(45deg, #007bff, #00bcd4);
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos para el detalle */
+    .detalle {
+        margin-top: 10px;
+        color: #333;
+    }
+
+    /* Estilos para "Jefe de Familia", "Calle" y "Número de Casa" */
+    .destacado {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* Estilos para el texto dentro de "Jefe de Familia", "Calle" y "Número de Casa" */
+    .texto-grande {
+        font-size: 20px;
+    }
+
+    /* Estilos para la tabla de personas */
+/* Estilos para la tabla de personas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-x: auto; /* Agrega desplazamiento horizontal si es necesario */
+}
+
+th, td {
+    padding: 5px 5px;
+    text-align: left;
+    border-bottom: 1px solid #c6c6c6; /* Borde en la parte inferior de cada celda */
+    border-right: 1px solid #c6c6c6; /* Borde en el lado derecho de cada celda */
+}
+
+th {
+    background-color: #000;
+    color: #ffffff;
+    text-align: center;
+    border-right: 1px solid #000; /* Borde en el lado derecho del último encabezado */
+}
+
+
+
+/* Hover efecto para resaltar las filas */
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Bordes para la última columna */
+td:last-child,
+th:last-child {
+    border-right: none; /* Elimina el borde derecho en la última columna */
+}
+
+
+/* Añade un estilo para limitar el ancho máximo de la tabla en pantallas pequeñas */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+        margin-left: 0;
+        border-radius: 0;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    th {
+        font-size: 16px;
+    }
+}
+
+
+    /* Estilos para los botones */
+    .boton {
+        padding: 4px 8px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .boton-eliminar {
+        background-color: #DC3545;
+    }
+
+    .boton-agregar {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 8px 12px;
+        font-size: 16px;
+    }
+
+    /* Estilo para la columna "Acciones" */
+    .acciones-column {
+        white-space: nowrap;
+    }
+
+    /* Estilo para los botones de acciones */
+    .acciones-column a {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    /* Elimina el margen derecho del último botón */
+    .acciones-column a:last-child {
+        margin-right: 0;
+    }
+
+    /* Estilo para centrar el encabezado h2 */
+    h2 {
+        text-align: center;
+        font-size: 24px; /* Ajusta el tamaño de la fuente según tus preferencias */
+        margin-bottom: 10px; /* Agrega espacio en la parte inferior para separarlo del contenido siguiente */
+    }
+
+
+    .table-container {
+        overflow-x: auto; /* Agrega desplazamiento horizontal si es necesario */
+    }
+    tr:hover {
+        background-color: #f2f2f2; /* Color de fondo cuando se pasa el mouse sobre la fila */
+    }
+
+    .boton-desactivado {
+        background-color: #dddddd; /* Cambia el color de fondo a gris claro o el color que prefieras */
+        color: #999999; /* Cambia el color del texto a gris más oscuro o el color que prefieras */
+        cursor: not-allowed; /* Cambia el cursor para indicar que el botón no es interactivo */
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <h1>Detalle de Carga Familiar:</h1>
+
+        <!-- Información de la familia -->
+        <table class="detalle-tabla" style="border-collapse: collapse; width: 100%;">
+            <tr>
+                <td style="border: none; text-align: center;">
+                    <span class="destacado">Jefe de Familia:</span><br>
+                    <span class="texto-grande">{{ familia.jefe_de_familia.P_nombre }} {{ familia.jefe_de_familia.P_apellido }}</span>
+                </td>
+                <td style="border: none; text-align: center;">
+                    <span class="destacado">Número de Calle:</span><br>
+                    <span class="texto-grande">{{ familia.jefe_de_familia.num_calle }}</span>
+                </td>
+            </tr>
+
+            <!-- Agrega este enlace en tu plantilla -->
+<a href="{% url 'generar_informe_pdf' familia_id=familia.idfamilia %}" class="boton" target="_blank">
+    Generar Informe PDF
+</a>
+ 
+            <tr>
+                <td style="border: none; text-align: center;">
+                    <span class="destacado">Número de Casa:</span><br>
+                    <span class="texto-grande">{{ familia.jefe_de_familia.num_casa }}</span>
+                </td>
+                <td style="border: none; text-align: center;">
+                    <span class="destacado">Número de Bloque:</span><br>
+                    <span class="texto-grande">{{ familia.jefe_de_familia.num_bloque }}</span>
+                </td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <!-- Mensaje de advertencia sobre el número máximo de miembros -->
+        {% if familia.familia_personas.all.count >= 7 %}
+            <div class="alert alert-warning" role="alert">
+                Esta Familia ha alcanzado el número máximo de carga familiar.
+            </div>
+        {% else %}
+            <!-- Mensaje si hay espacio disponible -->
+            {% with espacio_disponible=7 %}
+                <div class="alert alert-success" role="alert">
+                    Esta Familia tiene espacio disponible para más miembros.
+                </div>
+            {% endwith %}
+        {% endif %}
+
+        <hr>
+
+        <!-- Tabla de personas de la carga familiar -->
+        <h2 class="text-center">Personas de la Carga Familiar:</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cedula</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Sexo</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Estado Civil</th>
+                        <th>Parentesco</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for persona in familia.familia_personas.all %}
+                        <tr>
+                            <!-- Detalles de cada persona -->
+                            <td>{{ persona.cedula }}</td>
+                            <td>{{ persona.P_nombre }}</td>
+                            <td>{{ persona.P_apellido }}</td>
+                            <td>{{ persona.get_sexo_display }}</td>
+                            <td>{{ persona.fecha_nacimiento }}</td>
+                            <td>{{ persona.get_estado_civil_display }}</td>
+                            <td>
+                                {% if persona.parentesco %}
+                                    {{ persona.get_parentesco_display }}
+                                {% elif persona.jefe_familia %}
+                                    Es jefe de familia
+                                {% else %}
+                                    No tiene parentesco ni es jefe de familia
+                                {% endif %}
+                            </td>
+                            <td class="acciones-column">
+                                <!-- Botones de acciones para cada persona -->
+                                <a href="{% url 'editar_persona_carga' persona.idPersona %}" class="boton">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                {% if persona.jefe_familia == 1 and persona.familia_r.familia_personas.count <= 1 %}
+                                    <a href="{% url 'eliminar_persona_carga' persona.idPersona %}" class="boton boton-eliminar" onclick="return confirmarEliminar();">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                {% elif persona.carga_familiar == 1 %}
+                                    <a href="{% url 'eliminar_persona_carga' persona.idPersona %}" class="boton boton-eliminar" onclick="return confirmarEliminar();">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="#" class="boton boton-eliminar boton-desactivado" disabled>
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                {% endif %}
+
+                                <a href="{% url 'detalle_persona' persona.idPersona %}" class="boton">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Botón para agregar persona -->
+        {% if familia.familia_personas.all.count >= 7 %}
+            <a href="#" class="boton boton-agregar boton-desactivado" disabled>
+                Agregar Persona
+            </a>
+        {% else %}
+            <a href="{% url 'agregar_persona_carga' familia_id=familia.idfamilia %}" class="boton boton-agregar">
+                Agregar Persona
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function confirmarEliminar() {
+        return confirm("¿Estás seguro de que deseas eliminar esta persona?");
+    }
+</script>
+
+{% endblock %}

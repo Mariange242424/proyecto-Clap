@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block contenido %}
+
+<form method="post" action="{% url 'filtrar_jefes_de_familia' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Filtrar</button>
+  </form>
+
+  
+{% endblock %}

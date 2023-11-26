@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+  <div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div class="card-header">
+      <h2>¿Estás seguro de que deseas eliminar el bloque "{{ object }}"?</h2>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <p class="lead">Esta acción no se puede deshacer.</p>
+        </div>
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'nivel-educ-list' %}" class="btn btn-secondary ml-2">Cancelar</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+

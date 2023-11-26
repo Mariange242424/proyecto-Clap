@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}pdf{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="titulo">Jefes de Familia por Bloque</div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <label for="bloque" class="mb-2">Selecciona un bloque:</label>
+                        <select name="bloque" id="bloque" class="form-select mb-3">
+                            {% for bloque in bloques %}
+                            <option value="{{ bloque }}">{{ bloque }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary">Generar PDF</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

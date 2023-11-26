@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Lista Censo Personas{% endblock %}
+
+{% block contenido %}
+<style>
+    /* Ajustar el tamaño de fuente para todo el contenedor */
+    .container {
+        font-size: 20px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    /* Aumentar el tamaño de fuente para los encabezados */
+    h1 {
+        font-size: 30px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    /* Aumentar el tamaño de fuente para los elementos de la lista */
+    .list-group-item {
+        font-size: 18px; /* Puedes ajustar este valor según tu preferencia */
+    }
+
+    @media (min-width: 1400px) {
+        .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+            max-width: 1400px;
+        }
+    }
+
+    /* Estilo para la columna "Acciones" */
+    .acciones-column {
+        white-space: nowrap; /* Evita que los botones se envuelvan en múltiples líneas */
+    }
+
+    /* Estilo para los botones de acciones */
+    .acciones-column a {
+        display: inline-block; /* Hace que los botones estén en línea y no se apilen */
+        margin-right: 10px; /* Agrega espacio entre los botones */
+    }
+
+    /* Elimina el margen derecho del último botón */
+    .acciones-column a:last-child {
+        margin-right: 0;
+    }
+
+    /* Reducir el tamaño de fuente de las celdas de la tabla */
+    .table th, .table td {
+        font-size: 14px; /* Ajusta el tamaño según tus necesidades */
+    }
+
+    /* Reducir el espacio entre filas de la tabla */
+    .table tbody tr {
+        line-height: 1; /* Puedes ajustar el valor según tus necesidades */
+    }
+    /* Define una clase personalizada para los botones */
+.custom-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+}
+
+
+
+</style>
+
+
+
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title titulo">Listado General Personas</h2>
+        <div class="table-responsive" style="min-height: 50vh;">
+            <table class="table table-hover table-bordered align-middle" id="tblPersonas">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Cedula</th>
+                        <th scope="col">Jefe de Familia</th>
+                        <th scope="col">Primer Nombre</th>
+                        <th scope="col">Primer Apellido</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Edad</th>
+                        <th scope="col">Discapacidad</th>
+                        <th scope="col">Bloque</th>
+                        <th scope="col">Ver más</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for persona in personas %}
+                    <tr>
+                        <td>{{ persona.idPersona }}</td>
+                        <td>
+                            {% if persona.cedula %}
+                                {{ persona.cedula }}
+                            {% else %}
+                                No posee cédula
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if persona.jefe_familia %}
+                                Es Jefe de Familia
+                            {% else %}
+                                Cédula del Jefe de Familia: {{ persona.familia_r.jefe_de_familia.cedula }}
+                            {% endif %}
+                        </td>
+                        <td>{{ persona.P_nombre }}</td>
+                        <td>{{ persona.P_apellido}}</td>
+                        <td>{{ persona.get_sexo_display }}</td>
+                        <td>{{ persona.edad }}</td>
+                        <td>{% if persona.discapacidad %}
+                            Sí
+                        {% else %}
+                            No
+                        {% endif %}</td>
+                        <td>{{ persona.num_bloque }}</td>
+
+                        
+                        <td>
+                            <a href="{% url 'detalle_persona' persona.idPersona %}" class="boton">
+                                <i class="fa-solid fa-plus fa-xl" style="color: #0088f7;"></i><!-- Cambiado a un símbolo de "+" -->
+                            </a>
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

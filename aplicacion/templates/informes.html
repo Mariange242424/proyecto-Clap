@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<style>
+  /* Estilos generales */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Estilos para la tarjeta principal */
+  .card {
+    max-width: 1100px;
+    margin: 70px auto; /* Centra la tarjeta horizontalmente con un margen arriba */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+  }
+
+  /* Estilos para el título */
+  .titulo {
+    font-size: 30px; /* Tamaño más pequeño */
+    color: #fff; /* Texto en blanco */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #0074cc;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+
+  /* Estilos para la tabla y gráfico */
+  .informe-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .tabla-grafico {
+    width: 48%; /* Ancho reducido para que quepa en una fila */
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  th, td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #0074cc; /* Cambia el color de fondo a azul rey */
+    color: #fff;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #ffffff; /* Cambia el color de filas impares a blanco */
+  }
+
+  /* Estilos para los gráficos */
+  .grafico-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+
+  .grafico {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto; /* Centra el gráfico horizontalmente */
+  }
+
+
+  h2 {
+    text-align: center; /* Centra el título del informe */
+  }
+
+</style>
+  <div class="card">
+    <div class="titulo">Estadisticas Personas</div>
+    <div class="informe-container">
+      <!-- Informe de Edades -->
+      <div class="tabla-grafico">
+        <h2>Informe de Edades</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>Número de Personas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mayores de 18 años</td>
+              <td>{{ personas_mayores_de_18.count }}</td>
+            </tr>
+            <tr>
+              <td>Menores de 18 años</td>
+              <td>{{ personas_menores_de_18.count }}</td>
+            </tr>
+            <tr>
+              <td>Personas de la Tercera Edad</td>
+              <td>{{ personas_tercera_edad.count }}</td>
+            </tr>
+            <!-- Más filas de datos de edades -->
+          </tbody>
+        </table>
+        <div class="grafico-container">
+        <canvas id="graficoEdades" width="200" height="200"></canvas>
+        </div>
+      </div>
+
+      <!-- Informe de Estado Civil -->
+      <div class="tabla-grafico">
+        <h2>Informe de Estado Civil</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Estado Civil</th>
+              <th>Número de Personas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Casados</td>
+              <td>{{ personas_casadas.count }}</td>
+            </tr>
+            <tr>
+              <td>Solteros</td>
+              <td>{{ personas_solteras.count }}</td>
+            </tr>
+            <tr>
+              <td>En Concubinato</td>
+              <td>{{ personas_concubinato.count }}</td>
+            </tr>
+            <tr>
+              <td>Divorciadas</td>
+              <td>{{ personas_divorciadas.count }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="grafico-container">
+        <canvas id="graficoEstadoCivil" width="200" height="200"></canvas>
+        </div>
+      </div>
+
+      <div class="tabla-grafico">
+        <h2>Informe de Sexo</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Sexo</th>
+              <th>Número de Personas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Masculino</td>
+              <td>{{ personas_hombres }}</td>
+            </tr>
+            <tr>
+              <td>Femenino</td>
+              <td>{{ personas_mujeres }}</td>
+            </tr>
+            <!-- Más filas de datos de sexo -->
+          </tbody>
+        </table>
+        <div class="grafico-container">
+        <canvas id="graficoSexo" width="200" height="200"></canvas>
+        </div>
+      </div>
+      <div class="tabla-grafico">
+        <h2>Informe Estatus laboral</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>Número de Personas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Con trabajo</td>
+              <td>{{ personas_contrabajo.count}}</td>
+            </tr>
+            <tr>
+              <td>Sin trabajo</td>
+              <td>{{ personas_sintrabajo.count}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="grafico-container">
+          <canvas id="graficolaboral" width="200" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+      
+
+
+
+  <script>
+    // Datos para la gráfica de Edades (puedes personalizar estos datos)
+    var edadesData = {
+      labels: ["Mayores de 18", "Menores de 18", "Tercera Edad"],
+      datasets: [
+        {
+          data: [
+            {{ personas_mayores_de_18.count }},
+            {{ personas_menores_de_18.count }},
+            {{ personas_tercera_edad.count }}
+          ],
+          backgroundColor: ["#FF5733", "#3369FF", "#33FF42"], // Colores de las secciones
+        },
+      ],
+    };
+  
+    var ctxEdades = document.getElementById("graficoEdades").getContext("2d");
+    var graficoEdades = new Chart(ctxEdades, {
+      type: "doughnut", // Gráfico circular
+      data: edadesData,
+      options: {
+        responsive: false, // No permitir cambios de tamaño
+      },
+    });
+
+      // Datos para la gráfica de Sexo (puedes personalizar estos datos)
+      var sexoData = {
+        labels: ["Masculino", "Femenino"],
+        datasets: [
+          {
+            data: [
+              {{ personas_hombres }},
+              {{ personas_mujeres }},
+            ],
+            backgroundColor: ["#3369FF", "#FF5733"], // Colores de las secciones
+          },
+        ],
+      };
+    
+      var ctxSexo = document.getElementById("graficoSexo").getContext("2d");
+      var graficoSexo = new Chart(ctxSexo, {
+        type: "doughnut", // Gráfico circular
+        data: sexoData,
+        options: {
+          responsive: false, // No permitir cambios de tamaño
+        },
+      });
+    
+        // Datos para la gráfica de Estado Civil (puedes personalizar estos datos)
+  var estadoCivilData = {
+    labels: ["Casados", "Solteros", "En Concubinato","Divorciadas" ],
+    datasets: [
+      {
+        data: [
+          {{ personas_casadas.count }},
+          {{ personas_solteras.count }},
+          {{ personas_concubinato.count }},
+          {{ personas_divorciadas.count }},
+        ],
+        backgroundColor: ["#33FF42", "#3369FF", "#FF5733", "#ffc107"], // Colores de las secciones
+      },
+    ],
+  };
+
+  var ctxEstadoCivil = document.getElementById("graficoEstadoCivil").getContext("2d");
+  var graficoEstadoCivil = new Chart(ctxEstadoCivil, {
+    type: "doughnut", // Gráfico circular
+    data: estadoCivilData,
+    options: {
+      responsive: false, // No permitir cambios de tamaño
+    },
+  });
+
+  var laboralData = {
+    labels: ["Con trabajo", "Sin trabajo"],
+    datasets: [
+      {
+        data: [
+          {{ personas_contrabajo.count }},
+          {{ personas_sintrabajo.count }},
+        ],
+        backgroundColor: ["#33FF42", "#FF5733"], // Colores de las secciones
+      },
+    ],
+  };
+
+  var ctxLaboral = document.getElementById("graficolaboral").getContext("2d");
+  var graficoLaboral = new Chart(ctxLaboral, {
+    type: "doughnut", // Gráfico circular
+    data: laboralData,
+    options: {
+      responsive: false, // No permitir cambios de tamaño
+    },
+  });
+  
+  </script>
+  
+{% endblock %}
